@@ -1,0 +1,138 @@
+// ==============================================================================
+// Google Cloud Transcoder API LL-HLS / CMAF Multi-Bitrate Ladder Config (RU)
+// Source: OZAT Engineering Blog (https://ozat.kz)
+// GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/transcoder_live_stream_config_ru.json
+// ==============================================================================
+
+{
+  "template": {
+    "elementaryStreams": [
+      {
+        "key": "video_stream_4k",
+        "videoStream": {
+          "h265": {
+            "widthPixels": 3840,
+            "heightPixels": 2160,
+            "frameRate": 60,
+            "bitrateBps": 16000000,
+            "rateControlMode": "vbr",
+            "crfLevel": 21,
+            "bFrameCount": 3,
+            "gopDuration": "1.0s"
+          }
+        }
+      },
+      {
+        "key": "video_stream_1080p_high",
+        "videoStream": {
+          "h264": {
+            "widthPixels": 1920,
+            "heightPixels": 1080,
+            "frameRate": 60,
+            "bitrateBps": 6500000,
+            "profile": "high",
+            "bFrameCount": 2,
+            "gopDuration": "1.0s"
+          }
+        }
+      },
+      {
+        "key": "video_stream_720p",
+        "videoStream": {
+          "h264": {
+            "widthPixels": 1280,
+            "heightPixels": 720,
+            "frameRate": 30,
+            "bitrateBps": 2800000,
+            "profile": "main",
+            "gopDuration": "1.0s"
+          }
+        }
+      },
+      {
+        "key": "video_stream_360p_mobile",
+        "videoStream": {
+          "h264": {
+            "widthPixels": 640,
+            "heightPixels": 360,
+            "frameRate": 30,
+            "bitrateBps": 800000,
+            "profile": "baseline",
+            "gopDuration": "1.0s"
+          }
+        }
+      },
+      {
+        "key": "audio_stream_aac_stereo",
+        "audioStream": {
+          "codec": "aac",
+          "bitrateBps": 128000,
+          "channelCount": 2,
+          "sampleRateHertz": 48000
+        }
+      },
+      {
+        "key": "audio_stream_aac_kz_commentary",
+        "audioStream": {
+          "codec": "aac",
+          "bitrateBps": 128000,
+          "channelCount": 2,
+          "sampleRateHertz": 48000
+        }
+      }
+    ],
+    "muxStreams": [
+      {
+        "key": "mux_cmaf_4k",
+        "container": "fmp4",
+        "elementaryStreams": ["video_stream_4k", "audio_stream_aac_stereo"],
+        "segmentSettings": {
+          "segmentDuration": "1.0s",
+          "individualSegmentDuration": "0.2s"
+        }
+      },
+      {
+        "key": "mux_cmaf_1080p",
+        "container": "fmp4",
+        "elementaryStreams": ["video_stream_1080p_high", "audio_stream_aac_stereo"],
+        "segmentSettings": {
+          "segmentDuration": "1.0s",
+          "individualSegmentDuration": "0.2s"
+        }
+      },
+      {
+        "key": "mux_cmaf_720p",
+        "container": "fmp4",
+        "elementaryStreams": ["video_stream_720p", "audio_stream_aac_stereo"],
+        "segmentSettings": {
+          "segmentDuration": "1.0s",
+          "individualSegmentDuration": "0.2s"
+        }
+      },
+      {
+        "key": "mux_cmaf_360p",
+        "container": "fmp4",
+        "elementaryStreams": ["video_stream_360p_mobile", "audio_stream_aac_stereo"],
+        "segmentSettings": {
+          "segmentDuration": "1.0s",
+          "individualSegmentDuration": "0.2s"
+        }
+      }
+    ],
+    "manifests": [
+      {
+        "fileName": "master_ll_hls.m3u8",
+        "type": "HLS",
+        "muxStreams": ["mux_cmaf_4k", "mux_cmaf_1080p", "mux_cmaf_720p", "mux_cmaf_360p"]
+      },
+      {
+        "fileName": "manifest_cmaf.mpd",
+        "type": "DASH",
+        "muxStreams": ["mux_cmaf_4k", "mux_cmaf_1080p", "mux_cmaf_720p", "mux_cmaf_360p"]
+      }
+    ],
+    "output": {
+      "uri": "gs://ozat-live-shavkat-origin-almaty-prod/hls_live_out/"
+    }
+  }
+}
