@@ -1,0 +1,95 @@
+# ==============================================================================
+# Google Distributed Cloud (GDC) Edge & Anthos Bare-Metal Cluster Config (RU)
+# Source: OZAT Engineering Blog (https://ozat.kz)
+# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/gdc_edge_cluster_config_ru.yaml
+# ==============================================================================
+
+apiVersion: anthos.gke.io/v1
+kind: EdgeCluster
+metadata:
+  name: gdc-edge-almaty-crossroads-cluster
+  namespace: gdc-edge-system
+  labels:
+    environment: production
+    region: kz-almaty-traffic
+    tier: edge-micro-dc
+spec:
+  anthosBareMetalVersion: 1.18.2
+  clusterNetwork:
+    pods:
+      cidrBlocks:
+        - 192.168.64.0/18
+    services:
+      cidrBlocks:
+        - 192.168.128.0/20
+  controlPlane:
+    nodePoolSpec:
+      nodes:
+        - address: 10.240.12.10
+        - address: 10.240.12.11
+        - address: 10.240.12.12
+  nodePools:
+    - name: ruggedized-edge-workers
+      spec:
+        nodes:
+          - address: 10.240.12.20
+          - address: 10.240.12.21
+          - address: 10.240.12.22
+          - address: 10.240.12.23
+        taints:
+          - key: "hardware.edge.google.com/accelerator"
+            value: "nvidia-l4-edge"
+            effect: "NoSchedule"
+  storage:
+    localNVMeStorage:
+      storageClassName: "edge-nvme-fast-wal"
+      retentionPolicy: "RetainOnFailure"
+      allocatedCapacityGB: 2000
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: gdc-edge-vision-inferencer
+  namespace: traffic-telemetry
+spec:
+  selector:
+    matchLabels:
+      app: sergek-stream-edge-processor
+  template:
+    metadata:
+      labels:
+        app: sergek-stream-edge-processor
+    spec:
+      tolerations:
+        - key: "hardware.edge.google.com/accelerator"
+          operator: "Equal"
+          value: "nvidia-l4-edge"
+          effect: "NoSchedule"
+      containers:
+        - name: deepstream-tensorrt-pipeline
+          image: gcr.io/ozat-gov-tech-prod/edge-vision/deepstream-trt:v2.4.0
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+              memory: "16Gi"
+              cpu: "8"
+            requests:
+              nvidia.com/gpu: "1"
+              memory: "8Gi"
+              cpu: "4"
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: EDGE_OFFLINE_BUFFER_LIMIT_GB
+              value: "500"
+            - name: CENTRAL_GCP_INGEST_ENDPOINT
+              value: "telemetry-gateway.kz.gcp.internal:443"
+          volumeMounts:
+            - name: nvme-wal-storage
+              mountPath: /var/edge_buffer
+      volumes:
+        - name: nvme-wal-storage
+          persistentVolumeClaim:
+            claimName: edge-nvme-local-pvc
