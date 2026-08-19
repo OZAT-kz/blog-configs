@@ -1,0 +1,57 @@
+# ==============================================================================
+# Google Cloud Tasks & Cloud Run Kaspi Repricer Queue Pipeline (KZ)
+# Source: OZAT Engineering Blog (https://ozat.kz)
+# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cloud_tasks_kaspi_repricer_pipeline_kz.yaml
+# ==============================================================================
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kaspi-repricer-queue-config
+  namespace: e-commerce-retail
+data:
+  QUEUE_CONFIG: |
+    rateLimits:
+      maxDispatchesPerSecond: 10
+      maxConcurrentDispatches: 20
+      maxBurstSize: 15
+    retryConfig:
+      maxAttempts: 5
+      minBackoffSeconds: 2
+      maxBackoffSeconds: 60
+      maxDoublings: 3
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: kaspi-repricer-worker
+  namespace: e-commerce-retail
+  labels:
+    cloud.googleapis.com/location: us-central1
+    app: kaspi-shymkent-repricer
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "8"
+        run.googleapis.com/execution-environment: "gen2"
+    spec:
+      containerConcurrency: 40
+      timeoutSeconds: 60
+      containers:
+        - image: gcr.io/shymkent-autospares-retail/repricer-daemon:v1.4.0
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"
+          env:
+            - name: GCP_PROJECT_ID
+              value: "shymkent-autospares-retail"
+            - name: KASPI_MERCHANT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: kaspi-secrets
+                  key: merchant-id
+            - name: MIN_MARGIN_DEFAULT_KZT
+              value: "1500"
