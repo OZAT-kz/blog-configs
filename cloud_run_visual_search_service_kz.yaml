@@ -1,0 +1,44 @@
+# ==============================================================================
+# Google Cloud Run Serverless Visual Search Microservice Config (KZ)
+# Source: OZAT Engineering Blog (https://ozat.kz)
+# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cloud_run_visual_search_service_kz.yaml
+# ==============================================================================
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: showroom-visual-search-api
+  namespace: default
+  labels:
+    cloud.googleapis.com/location: us-central1
+    app: almaty-fashion-search
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "10"
+        run.googleapis.com/cpu-throttling: "true"
+        run.googleapis.com/startup-cpu-boost: "true"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 30
+      containers:
+        - image: gcr.io/almaty-fashion-retail/visual-search-engine:v1.2.0
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "1024Mi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+          env:
+            - name: GCP_PROJECT_ID
+              value: "almaty-fashion-retail"
+            - name: GCP_LOCATION
+              value: "us-central1"
+            - name: PRODUCT_SET_ID
+              value: "showroom-almaty-catalog-v1"
+          ports:
+            - name: http1
+              containerPort: 8080
