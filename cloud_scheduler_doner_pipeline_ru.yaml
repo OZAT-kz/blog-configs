@@ -1,0 +1,45 @@
+# ==============================================================================
+# Google Cloud Scheduler & Cloud Run Doner Forecasting Pipeline (RU)
+# Source: OZAT Engineering Blog (https://ozat.kz)
+# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cloud_scheduler_doner_pipeline_ru.yaml
+# ==============================================================================
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: doner-ml-forecast-cron-config
+  namespace: fastfood-production
+data:
+  CRON_SCHEDULE: "0 6 * * *" # Запуск ежедневно в 06:00 утра по времени Алматы (UTC+5)
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: doner-demand-predictor-service
+  namespace: fastfood-production
+  labels:
+    cloud.googleapis.com/location: asia-southeast1
+    app: almaty-doner-demand-predictor
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "3"
+        run.googleapis.com/execution-environment: "gen2"
+    spec:
+      containerConcurrency: 10
+      timeoutSeconds: 300
+      containers:
+        - image: gcr.io/almaty-doner-fastfood-ml/predictor:v2.1.0
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
+          env:
+            - name: GCP_PROJECT_ID
+              value: "almaty-doner-fastfood-ml"
+            - name: TELEGRAM_CHAT_ID
+              value: "-1002348571290"
+            - name: BIGQUERY_DATASET
+              value: "fastfood_analytics"
