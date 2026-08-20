@@ -1,0 +1,44 @@
+# ==============================================================================
+# Google Cloud Run Service for Dental WhatsApp AI Administrator (RU)
+# Source: OZAT Engineering Blog (https://ozat.kz)
+# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cloud_run_dental_whatsapp_bot_ru.yaml
+# ==============================================================================
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: dental-ai-admin-webhook
+  namespace: prod-medical-ai
+  labels:
+    cloud.googleapis.com/location: asia-southeast1
+    app: dental-whatsapp-nlu
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1" # Держим 1 теплый инстанс для нулевого cold start
+        autoscaling.knative.dev/maxScale: "5"
+        run.googleapis.com/cpu-throttling: "false"
+        run.googleapis.com/execution-environment: "gen2"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 15
+      containers:
+        - image: gcr.io/ozat-dental-ai/whatsapp-nlu-service:v1.4.2
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: dental-gemini-secret
+                  key: latest
+            - name: WHATSAPP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: whatsapp-cloud-token
+                  key: latest
+            - name: CRM_API_BASE_URL
+              value: "https://crm.almaty-dental.kz/api/v1"
