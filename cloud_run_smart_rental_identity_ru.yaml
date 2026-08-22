@@ -1,0 +1,57 @@
+# ==============================================================================
+# Google Cloud Run Service Configuration for Smart Rental Self-Check-in Guard
+# Source: OZAT Engineering Blog (https://ozat.kz)
+# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cloud_run_smart_rental_identity_ru.yaml
+# ==============================================================================
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: almaty-smart-rental-identity-guard
+  namespace: default
+  annotations:
+    run.googleapis.com/ingress: all
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "3"
+        run.googleapis.com/cpu-throttling: "true"
+        run.googleapis.com/memory: "512Mi"
+        run.googleapis.com/cpu: "1000m"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 45
+      containers:
+      - image: gcr.io/ozat-rental-prod/identity-guard:v1.2.0
+        env:
+        - name: GOOGLE_CLOUD_PROJECT
+          value: "ozat-rental-prod"
+        - name: DOCUMENT_AI_LOCATION
+          value: "us"
+        - name: DOCUMENT_AI_PROCESSOR_ID
+          value: "proc_kz_identity_v4"
+        - name: FIRESTORE_DB_NAME
+          value: "(default)"
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: rental-telegram-bot-token
+              key: latest
+        - name: TELEGRAM_OWNER_CHAT_ID
+          value: "718293411"
+        - name: TTLOCK_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: ttlock-app-client-id
+              key: latest
+        - name: TTLOCK_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: ttlock-access-token
+              key: latest
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: 1000m
