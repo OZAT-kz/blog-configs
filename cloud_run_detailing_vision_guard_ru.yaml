@@ -1,0 +1,48 @@
+# ==============================================================================
+# Google Cloud Run Service Configuration for Detailing AI Guard
+# Source: OZAT Engineering Blog (https://ozat.kz)
+# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cloud_run_detailing_vision_guard_ru.yaml
+# ==============================================================================
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: almaty-detailing-vision-guard
+  namespace: default
+  annotations:
+    run.googleapis.com/ingress: all
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "2"
+        run.googleapis.com/cpu-throttling: "true"
+        run.googleapis.com/memory: "512Mi"
+        run.googleapis.com/cpu: "1000m"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 60
+      containers:
+      - image: gcr.io/ozat-detailing-prod/vision-guard:v1.0.4
+        env:
+        - name: GOOGLE_CLOUD_PROJECT
+          value: "ozat-detailing-prod"
+        - name: FIRESTORE_DB_NAME
+          value: "(default)"
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: detailing-telegram-bot-token
+              key: latest
+        - name: TELEGRAM_OWNER_CHAT_ID
+          value: "718293411"
+        - name: RTSP_BOX_1
+          valueFrom:
+            secretKeyRef:
+              name: rtsp-cam-box1
+              key: latest
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: 1000m
