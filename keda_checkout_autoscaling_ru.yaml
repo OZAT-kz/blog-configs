@@ -1,5 +1,5 @@
 # ==============================================================================
-# Kubernetes KEDA ScaledObject for Checkout Service
+# keda_checkout_autoscaling_ru.yaml
 # Source: OZAT Engineering Blog (https://ozat.kz)
 # GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/keda_checkout_autoscaling_ru.yaml
 # ==============================================================================
