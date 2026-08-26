@@ -5,25 +5,25 @@
 // ==============================================================================
 
 # cloud_kms_cmek.tf
-# Дерекқор мен қойма үшін өзіміздің шифрлау кілттерімізді құрамыз
+# Создаем собственные ключи шифрования для базы данных и хранилища
 
 resource "google_kms_key_ring" "fintech_keyring" {
   name     = "fintech-keyring-v1"
   location = "europe-west3"
 }
 
-# Cloud SQL (PostgreSQL) дерекқорын шифрлауға арналған кілт
+# Ключ для шифрования базы данных Cloud SQL (PostgreSQL)
 resource "google_kms_crypto_key" "db_crypto_key" {
   name            = "cloud-sql-encryption-key"
   key_ring        = google_kms_key_ring.fintech_keyring.id
-  rotation_period = "7776000s" # Әр 90 күн сайын авто-ротация (PCI-DSS талабы)
+  rotation_period = "7776000s" # Авто-ротация каждые 90 дней (требование PCI-DSS)
 
   lifecycle {
-    prevent_destroy = true # Кілттің кездейсоқ жойылуынан (және барлық деректерді жоғалтудан) қорғау
+    prevent_destroy = true # Защита от случайного удаления ключа (и потери всех данных)
   }
 }
 
-# Cloud SQL сервистік аккаунтына осы кілтті пайдалану құқығын тағайындаймыз
+# Назначаем права сервисному аккаунту Cloud SQL на использование этого ключа
 resource "google_kms_crypto_key_iam_binding" "sql_kms_binding" {
   crypto_key_id = google_kms_crypto_key.db_crypto_key.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
