@@ -5,17 +5,17 @@
 // ==============================================================================
 
 # gke_secure_cluster.tf
-# Создаем приватный GKE кластер для FinTech
+# FinTech үшін жеке GKE кластерін құрамыз
 
 resource "google_container_cluster" "fintech_secure_cluster" {
   name     = "fintech-core-cluster"
-  location = "europe-west3" # Frankfurt (обычно устраивает большинство юрисдикций, если нет локальных ЦОД)
+  location = "europe-west3" # Франкфурт (егер жергілікті ХҚО болмаса, әдетте көптеген юрисдикцияларды қанағаттандырады)
 
-  # Отключаем дефолтный пул узлов, мы создадим кастомный с нужными политиками
+  # Дефолтты түйіндер пулын өшіреміз, біз қажетті саясаттары бар кастомды пул құрамыз
   remove_default_node_pool = true
   initial_node_count       = 1
 
-  # Приватный кластер: узлы не имеют белых IP
+  # Жеке кластер: түйіндерде ақ IP жоқ
   private_cluster_config {
     enable_private_nodes    = true
     enable_private_endpoint = false
@@ -29,13 +29,13 @@ resource "google_container_cluster" "fintech_secure_cluster" {
     }
   }
 
-  # Интеграция с Cloud KMS для шифрования секретов Kubernetes (etcd)
+  # Kubernetes құпияларын (etcd) шифрлау үшін Cloud KMS-пен интеграция
   database_encryption {
     state    = "ENCRYPTED"
     key_name = google_kms_crypto_key.k8s_secrets.id
   }
 
-  # Workload Identity - прощайте сервисные аккаунты в JSON ключах!
+  # Workload Identity - JSON кілттеріндегі сервистік аккаунттармен қоштасыңыз!
   workload_identity_config {
     workload_pool = "${var.project_id}.svc.id.goog"
   }
@@ -49,13 +49,13 @@ resource "google_container_node_pool" "secure_nodes" {
   node_config {
     machine_type = "e2-standard-4"
     
-    # Shielded VMs - защита от руткитов и изменений на уровне бутлоадера
+    # Shielded VMs - бутлоадер деңгейіндегі өзгерістер мен руткиттерден қорғау
     shielded_instance_config {
       enable_secure_boot = true
       enable_integrity_monitoring = true
     }
 
-    # Сервисный аккаунт с минимальными правами (Least Privilege)
+    # Минималды құқықтары бар сервистік аккаунт (Least Privilege)
     service_account = google_service_account.gke_sa.email
     oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
   }
