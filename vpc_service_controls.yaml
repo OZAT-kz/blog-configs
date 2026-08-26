@@ -5,7 +5,7 @@
 # ==============================================================================
 
 # vpc_service_controls.yaml
-# Access Context Manager арқылы қауіпсіздік периметрін анықтау
+# Определение периметра безопасности через Access Context Manager
 
 resources:
   - accessPolicies/112233445566/servicePerimeters/fintech_prod_perimeter
@@ -13,7 +13,7 @@ resources:
 servicePerimeters:
   - name: accessPolicies/112233445566/servicePerimeters/fintech_prod_perimeter
     title: FinTech Production Perimeter
-    description: "API-ға сырттан кіруді бұғаттаймыз"
+    description: "Блокируем доступ к API извне"
     status:
       restrictedServices:
         - storage.googleapis.com
@@ -24,7 +24,7 @@ servicePerimeters:
       accessLevels:
         - accessPolicies/112233445566/accessLevels/corp_vpn_only
       
-      # Күмбездің ішінде орналасқан ресурстар (жобалар)
+      # Ресурсы (проекты), которые находятся внутри купола
       resources:
         - projects/fintech-prod-project
 
@@ -34,5 +34,5 @@ accessLevels:
     basic:
       conditions:
         - ipSubnetworks:
-            - 192.0.2.0/24 # Корпоративтік VPN IP-мекенжайлары
-            - 203.0.113.0/24 # Астанадағы кеңсенің IP-мекенжайлары
+            - 192.0.2.0/24 # IP-адреса корпоративного VPN
+            - 203.0.113.0/24 # IP-адреса офиса в Астане
