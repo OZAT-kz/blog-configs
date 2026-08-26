@@ -1,11 +1,11 @@
 // ==============================================================================
-// Optimized Dockerfile for Next.js on Google Cloud Run
+// nextjs-cloud-run.dockerfile
 // Source: OZAT Engineering Blog (https://ozat.kz)
 // GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/nextjs-cloud-run.dockerfile
 // ==============================================================================
 
 
-# Cloud Run-дағы Next.js үшін Dockerfile
+# Dockerfile для Next.js на Cloud Run
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
