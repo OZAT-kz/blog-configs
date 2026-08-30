@@ -1,11 +1,10 @@
-// ==============================================================================
-// nextjs-cloud-run.dockerfile
-// Source: OZAT Engineering Hub (https://ozat.kz)
-// GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/nextjs-cloud-run.dockerfile
-// ==============================================================================
+# ==============================================================================
+# AdSense убивает ваш Core Web Vitals? Как мы ускорили загрузку рекламы в 3 раза, перенеся SSR на Google Cloud Run
+# Source: OZAT Engineering Hub (https://ozat.kz)
+# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/nextjs-cloud-run.dockerfile
+# ==============================================================================
 
-
-# Cloud Run-дағы Next.js үшін Dockerfile
+# Dockerfile для Next.js на Cloud Run
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
