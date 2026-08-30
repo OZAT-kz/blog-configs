@@ -1,6 +1,6 @@
 // ==============================================================================
 // ESP32 IoT Greenhouse Sensor & Relay Firmware for Firebase (KZ)
-// Source: OZAT Engineering Blog (https://ozat.kz)
+// Source: OZAT Engineering Hub (https://ozat.kz)
 // GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/esp32_saryagash_greenhouse_firmware_kz.kz.ino
 // ==============================================================================
 
