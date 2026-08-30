@@ -1,6 +1,6 @@
 // ==============================================================================
 // gke_secure_cluster.tf
-// Source: OZAT Engineering Blog (https://ozat.kz)
+// Source: OZAT Engineering Hub (https://ozat.kz)
 // GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/gke_secure_cluster.tf
 // ==============================================================================
 
