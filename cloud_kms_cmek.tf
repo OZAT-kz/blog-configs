@@ -4,11 +4,7 @@
 // GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cloud_kms_cmek.tf
 // ==============================================================================
 
-# cloud_kms_cmek.tf
-# Создаем собственные ключи шифрования для базы данных и хранилища
-
-resource "google_kms_key_ring" "fintech_keyring" {
-  name     = "fintech-keyring-v1"
+name     = "fintech-keyring-v1"
   location = "europe-west3"
 }
 
