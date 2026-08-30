@@ -1,6 +1,6 @@
 // ==============================================================================
 // cloud_kms_cmek.tf
-// Source: OZAT Engineering Blog (https://ozat.kz)
+// Source: OZAT Engineering Hub (https://ozat.kz)
 // GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cloud_kms_cmek.tf
 // ==============================================================================
 
