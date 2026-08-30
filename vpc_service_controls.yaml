@@ -4,11 +4,7 @@
 # GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/vpc_service_controls.yaml
 # ==============================================================================
 
-# vpc_service_controls.yaml
-# Определение периметра безопасности через Access Context Manager
-
-resources:
-  - accessPolicies/112233445566/servicePerimeters/fintech_prod_perimeter
+- accessPolicies/112233445566/servicePerimeters/fintech_prod_perimeter
 
 servicePerimeters:
   - name: accessPolicies/112233445566/servicePerimeters/fintech_prod_perimeter
