@@ -4,11 +4,7 @@
 // GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/gke_secure_cluster.tf
 // ==============================================================================
 
-# gke_secure_cluster.tf
-# Создаем приватный GKE кластер для FinTech
-
-resource "google_container_cluster" "fintech_secure_cluster" {
-  name     = "fintech-core-cluster"
+name     = "fintech-core-cluster"
   location = "europe-west3" # Frankfurt (обычно устраивает большинство юрисдикций, если нет локальных ЦОД)
 
   # Отключаем дефолтный пул узлов, мы создадим кастомный с нужными политиками
