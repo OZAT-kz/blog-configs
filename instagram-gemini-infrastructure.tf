@@ -1,5 +1,5 @@
 // ==============================================================================
-// Terraform for Instagram Gemini Bot on Cloud Run and Cloud Tasks
+// «Цена в дайрект» убивает 60% продаж: Автономный Direct-шоппинг на Gemini 2.5 Flash + Instagram Graph API + Kaspi Pay Webhook
 // Source: OZAT Engineering Hub (https://ozat.kz)
 // GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/instagram-gemini-infrastructure.tf
 // ==============================================================================
