@@ -1,8 +1,8 @@
-# ==============================================================================
-# Terraform for WhatsApp Voice Bot
-# Source: OZAT Engineering Hub (https://ozat.kz)
-# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/whatsapp-audio-cloudrun.tf
-# ==============================================================================
+// ==============================================================================
+// Голосовые на 3 минуты в WhatsApp: Авто-транскрипция и создание заказа в 1С/МойСклад через Gemini 2.5 Flash Audio
+// Source: OZAT Engineering Hub (https://ozat.kz)
+// GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/whatsapp-audio-cloudrun.tf
+// ==============================================================================
 
 terraform {
   required_providers {
