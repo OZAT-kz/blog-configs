@@ -1,8 +1,8 @@
-# ==============================================================================
-# Terraform for Cargo Parser with Document AI
-# Source: OZAT Engineering Hub (https://ozat.kz)
-# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cargo_parser_cloudrun.tf
-# ==============================================================================
+// ==============================================================================
+// Карго-Трекер без нервов: Парсинг китайских накладных (1688 / Taobao / WeChat) с фото через Document AI + Gemini 2.5 Flash
+// Source: OZAT Engineering Hub (https://ozat.kz)
+// GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cargo_parser_cloudrun.tf
+// ==============================================================================
 
 terraform {
   required_providers {
