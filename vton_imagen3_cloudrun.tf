@@ -1,8 +1,8 @@
-# ==============================================================================
-# Terraform for VTON Backend
-# Source: OZAT Engineering Hub (https://ozat.kz)
-# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/vton_imagen3_cloudrun.tf
-# ==============================================================================
+// ==============================================================================
+// Виртуальная примерочная для Instagram-бутиков: Image-to-Image генерация на Imagen 3 / Vertex AI по фото клиента
+// Source: OZAT Engineering Hub (https://ozat.kz)
+// GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/vton_imagen3_cloudrun.tf
+// ==============================================================================
 
 terraform {
   required_providers {
