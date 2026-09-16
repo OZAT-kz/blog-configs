@@ -4,7 +4,6 @@
 # GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/nextjs-cloud-run.dockerfile
 # ==============================================================================
 
-# Dockerfile для Next.js на Cloud Run
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
