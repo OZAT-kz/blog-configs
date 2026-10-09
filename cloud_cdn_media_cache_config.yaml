@@ -1,0 +1,27 @@
+# ==============================================================================
+# Казахстанский E-E-A-T: как локальный фудблогер/ресторанный гид вышел на первое место в Google без ссылочных бирж и монетизировал 50 000 читателей через Ad Manager
+# Source: OZAT Engineering Hub (https://ozat.kz)
+# GitHub: https://github.com/OZAT-kz/blog-configs/blob/main/cloud_cdn_media_cache_config.yaml
+# ==============================================================================
+
+apiVersion: compute.cnrm.cloud.google.com/v1beta1
+kind: ComputeBackendBucket
+metadata:
+  name: almaty-food-guide-static-backend
+  namespace: production-media
+spec:
+  bucketRef:
+    name: almaty-food-media-assets
+  enableCdn: true
+  cdnPolicy:
+    cacheMode: "CACHE_ALL_STATIC"
+    defaultTtl: 86400
+    maxTtl: 31536000
+    clientTtl: 3600
+    serveWhileStale: 86400
+    negativeCaching: true
+    negativeCachingPolicy:
+      - code: 404
+        ttl: 120
+      - code: 502
+        ttl: 10
